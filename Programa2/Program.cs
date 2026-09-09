@@ -30,62 +30,53 @@ class Program
                     while (cargandoProductos)
                     {
                         Console.WriteLine("\n--- Ingreso de nuevo producto ---");
-                        bool esValido = true;
-                        string motivoRechazo = "";
+                        string nombre;
+                        do
+                        {
+                            Console.Write("Nombre del producto: ");
+                            nombre = Console.ReadLine();
 
-                        Console.Write("Nombre del producto: ");
-                        string nombre = Console.ReadLine();
-                        if (string.IsNullOrWhiteSpace(nombre))
-                        {
-                            esValido = false;
-                            motivoRechazo += "[El nombre no puede estar vacío] ";
+                            if (string.IsNullOrWhiteSpace(nombre))
+                            {
+                                Console.WriteLine("El nombre no puede estar vacío.\n");
+                            }
                         }
+                        while (string.IsNullOrWhiteSpace(nombre));
 
-                        Console.Write("Precio del producto: ");
-                        string entradaPrecio = Console.ReadLine();
-                        decimal precio = 0;
-                        if (!decimal.TryParse(entradaPrecio, out precio))
+                        decimal precio;
+                        do
                         {
-                            esValido = false;
-                            motivoRechazo += "[Formato de precio inválido] ";
-                        }
-                        else if (precio < 0)
-                        {
-                            esValido = false;
-                            motivoRechazo += "[El precio no puede ser negativo] ";
-                        }
+                            Console.Write("Precio del producto: ");
+                            string entradaPrecio = Console.ReadLine();
 
-                        Console.Write("Cantidad de unidades: ");
-                        string entradaCantidad = Console.ReadLine();
-                        int cantidad = 0;
-                        if (!int.TryParse(entradaCantidad, out cantidad))
-                        {
-                            esValido = false;
-                            motivoRechazo += "[Formato de cantidad inválido] ";
-                        }
-                        else if (cantidad > 1000)
-                        {
-                            esValido = false;
-                            motivoRechazo += "[La cantidad no puede superar 1000 unidades] ";
-                        }
-                        else if (cantidad < 0)
-                        {
-                            esValido = false;
-                            motivoRechazo += "[La cantidad no puede ser negativa] ";
-                        }
+                            if (decimal.TryParse(entradaPrecio, out precio) && precio >= 0)
+                            {
+                                break;
+                            }
 
-                        if (esValido)
-                        {
-                            registrosValidos++;
-                            valorTotalInventario += precio * cantidad;
-                            productosValidos.Add($"{nombre} (Precio: ${precio} | Cantidad: {cantidad})");
-                            Console.WriteLine("Registro guardado exitosamente.");
+                            Console.WriteLine("El precio debe ser un número válido y no negativo.\n");
                         }
-                        else
+                        while (true);
+
+                        int cantidad;
+                        do
                         {
-                            registrosRechazados++;
-                            Console.WriteLine($"Registro RECHAZADO. Motivo: {motivoRechazo}");
+                            Console.Write("Cantidad de unidades: ");
+                            string entradaCantidad = Console.ReadLine();
+
+                            if (int.TryParse(entradaCantidad, out cantidad) && cantidad >= 0 && cantidad <= 1000)
+                            {
+                                break;
+                            }
+
+                            Console.WriteLine("La cantidad debe ser un número entero entre 0 y 1000.\n");
                         }
+                        while (true);
+
+                        registrosValidos++;
+                        valorTotalInventario += precio * cantidad;
+                        productosValidos.Add($"{nombre} (Precio: ${precio} | Cantidad: {cantidad})");
+                        Console.WriteLine("Registro guardado exitosamente.");
 
                         Console.Write("\n¿Desea agregar otro producto ahora mismo? (s/n): ");
                         string respuesta = (Console.ReadLine() ?? "").Trim().ToLower();
