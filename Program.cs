@@ -6,61 +6,52 @@ class Program
     {
         Console.WriteLine("=== REGISTRO DE PRODUCTO ===\n");
 
-        bool esValido = true;
-        string motivoRechazo = "";
+        string nombre;
+        do
+        {
+            Console.Write("Nombre del producto: ");
+            nombre = Console.ReadLine();
 
-        Console.Write("Nombre del producto: ");
-        string nombre = Console.ReadLine();
-        if (string.IsNullOrWhiteSpace(nombre))
-        {
-            esValido = false;
-            motivoRechazo += "- El nombre no puede quedar vacío.\n";
+            if (string.IsNullOrWhiteSpace(nombre))
+            {
+                Console.WriteLine("El nombre no puede quedar vacío.\n");
+            }
         }
+        while (string.IsNullOrWhiteSpace(nombre));
 
-        Console.Write("Precio del producto: ");
-        string entradaPrecio = Console.ReadLine();
-        decimal precio = 0;
-        if (!decimal.TryParse(entradaPrecio, out precio))
+        decimal precio;
+        do
         {
-            esValido = false;
-            motivoRechazo += "- El precio tiene un formato inválido.\n";
-        }
-        else if (precio < 0)
-        {
-            esValido = false;
-            motivoRechazo += "- El precio no puede ser negativo.\n";
-        }
+            Console.Write("Precio del producto: ");
+            string entradaPrecio = Console.ReadLine();
 
-        Console.Write("Cantidad de unidades: ");
-        string entradaCantidad = Console.ReadLine();
-        int cantidad = 0;
-        if (!int.TryParse(entradaCantidad, out cantidad))
-        {
-            esValido = false;
-            motivoRechazo += "- La cantidad tiene un formato inválido.\n";
+            if (decimal.TryParse(entradaPrecio, out precio) && precio >= 0)
+            {
+                break;
+            }
+
+            Console.WriteLine("El precio debe ser un número válido y no negativo.\n");
         }
-        else if (cantidad > 1000)
+        while (true);
+
+        int cantidad;
+        do
         {
-            esValido = false;
-            motivoRechazo += "- La cantidad no puede superar 1000 unidades.\n";
+            Console.Write("Cantidad de unidades: ");
+            string entradaCantidad = Console.ReadLine();
+
+            if (int.TryParse(entradaCantidad, out cantidad) && cantidad >= 0 && cantidad <= 1000)
+            {
+                break;
+            }
+
+            Console.WriteLine("La cantidad debe ser un número entero entre 0 y 1000.\n");
         }
-        else if (cantidad < 0)
-        {
-            esValido = false;
-            motivoRechazo += "- La cantidad no puede ser negativa.\n";
-        }
+        while (true);
 
         Console.WriteLine();
-        if (esValido)
-        {
-            Console.WriteLine("REGISTRO VÁLIDO");
-            Console.WriteLine($"Producto: {nombre} | Precio: ${precio} | Cantidad: {cantidad}");
-        }
-        else
-        {
-            Console.WriteLine("REGISTRO RECHAZADO. Motivo(s):");
-            Console.Write(motivoRechazo);
-        }
+        Console.WriteLine("REGISTRO VÁLIDO");
+        Console.WriteLine($"Producto: {nombre} | Precio: ${precio} | Cantidad: {cantidad}");
 
         Console.WriteLine("\nPresione una tecla para salir...");
         Console.ReadKey();
